@@ -1,31 +1,14 @@
-import random
 import flappy_bird_gymnasium
 import gymnasium
 from matplotlib import pyplot as plt
-import numpy as np
 import torch
+
+from main import NeuralNetwork
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 
 env = gymnasium.make("FlappyBird-v0", render_mode="human")
-
-class NeuralNetwork(torch.nn.Module):
-    def __init__(self, num_inputs, num_actions):
-        super(NeuralNetwork, self).__init__()
-        self.model = torch.nn.Sequential(
-            torch.nn.Linear(num_inputs, 128),
-            torch.nn.ReLU(),
-            torch.nn.Linear(128, 256),
-            torch.nn.ReLU(),
-            torch.nn.Linear(256, 128),
-            torch.nn.ReLU(),
-            torch.nn.Linear(128, num_actions)
-        )
-
-    def forward(self, state):
-        return self.model(state)
-
 
 def test(model_number, number_of_games=10):
     model = NeuralNetwork(env.observation_space.shape[0], env.action_space.n)
@@ -50,5 +33,7 @@ def test(model_number, number_of_games=10):
 
 
 if __name__ == "__main__":
-    test(3000, 10)
+    input_data = input(f"Input [model_number] [number_of_games]: ")
+    model_number, number_of_games = input_data.split()
+    test(int(model_number), int(number_of_games))
 
